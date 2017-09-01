@@ -19,7 +19,7 @@ $ react-native run-ios
 
 You can check example screens source code in [example module screens](https://github.com/wix-private/wix-react-native-calendar/tree/master/example/src/screens)
 
-This project is compatible with Expo/CRNA (without ejecting), and the examples have been [published on Expo](https://expo.io/@community/react-native-calendars-example) 
+This project is compatible with Expo/CRNA (without ejecting), and the examples have been [published on Expo](https://expo.io/@community/react-native-calendars-example)
 
 ## Installation
 
@@ -73,7 +73,7 @@ LocaleConfig.defaultLocale = 'fr';
 #### Basic parameters
 
 ```javascript
-<Calendar 
+<Calendar
   // Initially visible month. Default = Date()
   current={'2012-03-01'}
   // Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined
@@ -102,12 +102,16 @@ LocaleConfig.defaultLocale = 'fr';
 
 #### Date marking
 
+**!Disclaimer!** Make sure that `markedDates` param is immutable. If you change `markedDates` object content but the reference to it does not change calendar update will not be triggered.
+
+Dot marking
+
 <kbd>
   <img height=50 src="https://github.com/wix-private/wix-react-native-calendar/blob/master/demo/marking1.png?raw=true">
 </kbd>
 
 ```javascript
-<Calendar 
+<Calendar
   // Collection of dates that have to be marked. Default = {}
   markedDates={{
     '2012-05-16': {selected: true, marked: true},
@@ -116,6 +120,8 @@ LocaleConfig.defaultLocale = 'fr';
   }}
 />
 ```
+
+Interval marking
 
 <kbd>
   <img height=50 src="https://github.com/wix-private/wix-react-native-calendar/blob/master/demo/marking2.png?raw=true">
@@ -126,7 +132,7 @@ LocaleConfig.defaultLocale = 'fr';
 </kbd>
 
 ```javascript
-<Calendar 
+<Calendar
   // Collection of dates that have to be colored in a special way. Default = {}
    markedDates={
     {'2012-05-20': [{textColor: 'green'}],
@@ -139,6 +145,8 @@ LocaleConfig.defaultLocale = 'fr';
 />
 ```
 
+Keep in mind that different marking types are not compatible. You can use just one marking style for calendar.
+
 #### Displaying data loading indicator
 
 <kbd>
@@ -150,7 +158,7 @@ The loading indicator next to month name will be displayed if `<Calendar />` has
 #### Customizing look & feel
 
 ```javascript
-<Calendar 
+<Calendar
   // Specify style for calendar container element. Default = {}
   style={{
     borderWidth: 1,
@@ -169,7 +177,13 @@ The loading indicator next to month name will be displayed if `<Calendar />` has
     dotColor: '#00adf5',
     selectedDotColor: '#ffffff',
     arrowColor: 'orange',
-    monthTextColor: 'blue'
+    monthTextColor: 'blue',
+    textDayFontFamily: 'monospace',
+    textMonthFontFamily: 'monospace',
+    textDayHeaderFontFamily: 'monospace',
+    textDayFontSize: 16,
+    textMonthFontSize: 16,
+    textDayHeaderFontSize: 16
   }}
 />
 ```
@@ -222,12 +236,18 @@ An advanced agenda component that can display interactive listings for calendar 
   onDayChange={(day)=>{console.log('day changed')}}
   // initially selected day
   selected={'2012-05-16'}
+  // Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined
+  minDate={'2012-05-10'}
+  // Maximum date that can be selected, dates after maxDate will be grayed out. Default = undefined
+  maxDate={'2012-05-30'}
   // specify how each item should be rendered in agenda
   renderItem={(item, firstItemInDay) => {return (<View />);}}
   // specify how each date should be rendered. day can be undefined if the item is not first in that day.
   renderDay={(day, item) => {return (<View />);}}
   // specify how empty date content with no items should be rendered
   renderEmptyDate={() => {return (<View />);}}
+  // specify how agenda knob should look like
+  renderKnob={() => {return (<View />);}}
   // specify your item comparison function for increased performance
   rowHasChanged={(r1, r2) => {return r1.text !== r2.text}}
   // Hide knob button. Default = false
@@ -237,7 +257,8 @@ An advanced agenda component that can display interactive listings for calendar 
     ...calendarTheme,
     agendaDayTextColor: 'yellow',
     agendaDayNumColor: 'green',
-    agendaTodayColor: 'red'
+    agendaTodayColor: 'red',
+    agendaKnobColor: 'blue'
   }}
   // agenda container style
   style={{}}
