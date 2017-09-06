@@ -6,17 +6,16 @@ export default function(theme={}) {
   return StyleSheet.create({
     header: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
-      paddingLeft: 10,
-      paddingRight: 10,
+      justifyContent: 'flex-start',
+      paddingHorizontal: appStyle.monthHeaderPaddingHorizontal,
       alignItems: 'center'
     },
     monthText: {
       fontSize: appStyle.textMonthFontSize,
       fontFamily: appStyle.textMonthFontFamily,
-      fontWeight: '300',
+      fontWeight: appStyle.textMonthFontWeight,
       color: appStyle.monthTextColor,
-      margin: 10
+      margin: 10,
     },
     arrow: {
       padding: 10

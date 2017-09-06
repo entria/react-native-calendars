@@ -69,7 +69,7 @@ class CalendarList extends Component {
         <Calendar
           theme={this.props.theme}
           selected={this.props.selected}
-          style={[{height: calendarHeight}, this.style.calendar]}
+          style={[this.style.calendar, this.props.calendarStyle]}
           current={row}
           hideArrows
           hideExtraDays={this.props.hideExtraDays === undefined ? true : this.props.hideExtraDays}
@@ -82,6 +82,10 @@ class CalendarList extends Component {
           maxDate={this.props.maxDate}
           firstDay={this.props.firstDay}
           monthFormat={this.props.monthFormat}
+          shouldAnimateRangeSelection={this.props.shouldAnimateRangeSelection}
+          animationDuration={this.props.animationDuration}
+          onAnimationComplete={this.props.onAnimationComplete}
+          renderCalendarFooter={this.props.renderCalendarFooter}
         />);
     } else {
       const text = row.toString();
