@@ -26,6 +26,10 @@ export const monthHeaderPaddingHorizontal = 10;
 export const textDayFontWeight = '300';
 export const textMonthFontWeight = '300';
 
+export const selectedDayBorderRadius = 17;
+export const selectedDayMarginLeft = 0;
+export const selectedDayMarginRight = 0;
+
 export const calendarBackground = foregroundColor;
 export const textSectionTitleColor = '#b6c1cd';
 export const selectedDayBackgroundColor = textLinkColor;

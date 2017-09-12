@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 //import _ from 'lodash';
 import {
+  StyleSheet,
   TouchableWithoutFeedback,
   Text,
   View,
@@ -131,14 +132,15 @@ class Day extends Component {
       textStyle.push(this.style.todayText);
     }
 
-    const prevTextColor = textStyle[textStyle.length-1].color;
+    const prevTextColor = StyleSheet.flatten(textStyle).color;
+
+    const flags = this.markingStyle;
 
     if (this.props.marked) {
       containerStyle.push({
-        borderRadius: 17
+        borderRadius: this.theme.selectedDayBorderRadius
       });
 
-      const flags = this.markingStyle;
       if (flags.textStyle) {
         textStyle.push(flags.textStyle);
       }
@@ -204,34 +206,34 @@ class Day extends Component {
       if (flags.startingDay && flags.endingDay) {
         fillers = <View style={this.style.fillers}>
           <View style={{
+            backgroundColor: flags.startingDay.color,
+            borderRadius: this.theme.selectedDayBorderRadius,
+            marginLeft: this.theme.selectedDayMarginLeft,
+            marginRight: this.theme.selectedDayMarginRight,
             height: this.style.fillers.height,
             flex: 1,
-            marginLeft: 10,
-            marginRight: 10,
-            backgroundColor: flags.startingDay.color,
-            borderRadius: 17,
           }}/>
         </View>
       } else if (flags.startingDay) {
         fillers = <View style={this.style.fillers}>
           <Animated.View style={{
+            backgroundColor: flags.startingDay.color,
+            borderTopLeftRadius: this.theme.selectedDayBorderRadius,
+            borderBottomLeftRadius: this.theme.selectedDayBorderRadius,
+            marginLeft: this.theme.selectedDayMarginLeft,
             height: this.style.fillers.height,
             flex: 1,
-            marginLeft: 10,
-            backgroundColor: flags.startingDay.color,
-            borderTopLeftRadius: 17,
-            borderBottomLeftRadius: 17,
           }}/>
         </View>
       } else if (flags.endingDay) {
         fillers = <View style={this.style.fillers}>
           <Animated.View style={{
+            backgroundColor: flags.endingDay.color,
+            borderTopRightRadius: this.theme.selectedDayBorderRadius,
+            borderBottomRightRadius: this.theme.selectedDayBorderRadius,
+            marginRight: this.theme.selectedDayMarginRight,
             height: this.style.fillers.height,
             flex: flexFilled,
-            marginRight: 10,
-            backgroundColor: flags.endingDay.color,
-            borderTopRightRadius: 17,
-            borderBottomRightRadius: 17,
           }}/>
           <Animated.View style={{
             flex: flexUnfilled,
@@ -253,13 +255,17 @@ class Day extends Component {
 
     const newTextColor = textStyle[textStyle.length-1].color;
     const hasNewColor = newTextColor !== undefined && prevTextColor !== newTextColor;
+    // don't animate text color transition if the starting day is also the ending day
+    const shouldSkipAnimation = false;
 
     if (animationValue && isSameMonth && hasNewColor) {
-      textStyle[textStyle.length-1].color = animationValue.interpolate({
+      textStyle[textStyle.length-1].color = shouldSkipAnimation ? newTextColor : animationValue.interpolate({
         inputRange: [0, 1],
-        outputRange: ['#000', '#FFF'],
+        outputRange: [prevTextColor, newTextColor],
       });
     }
+
+    const TextElement = shouldSkipAnimation ? Text : Animated.Text;
 
     return (
       <TouchableWithoutFeedback onPress={this.props.onPress}>
@@ -267,7 +273,7 @@ class Day extends Component {
           {fillers}
           <View style={containerStyle}>
             {dot}
-            <Animated.Text style={textStyle}>{String(this.props.children)}</Animated.Text>
+            <TextElement style={textStyle}>{String(this.props.children)}</TextElement>
           </View>
         </View>
       </TouchableWithoutFeedback>
