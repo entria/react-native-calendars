@@ -43,7 +43,7 @@ class CalendarListItem extends Component {
     } else {
       const text = row.toString();
       return (
-        <View style={[{height: calendarHeight}, this.style.placeholder]}>
+        <View style={[{height: this.props.calendarHeight}, this.style.placeholder]}>
           <Text style={this.style.placeholderText}>{text}</Text>
         </View>
       );
