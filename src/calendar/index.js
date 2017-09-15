@@ -27,6 +27,8 @@ const markingTypeDayCompMap = {
   'simple': Day,
 };
 
+const EmptyArray = [];
+
 class Calendar extends Component {
   static propTypes = {
     // Specify theme properties to override specific styles for calendar parts. Default = {}
@@ -70,6 +72,8 @@ class Calendar extends Component {
     monthFormat: PropTypes.string,
     // Disables changing month when click on days of other months (when hideExtraDays is false). Default = false
     disableMonthChange: PropTypes.bool,
+    //Hide day names. Default = false
+    hideDayNames: PropTypes.bool
     // Should we animate the selection of the dates?
     // Keep in mind this is expected to work only with a simple date selection using markedDates
     //  (continuous dates are selected, and the first date has startingDay checked and the last one has endingDay)
@@ -98,6 +102,7 @@ class Calendar extends Component {
     this.updateMonth = this.updateMonth.bind(this);
     this.addMonth = this.addMonth.bind(this);
     this.isSelected = this.isSelected.bind(this);
+    this.pressDay = this.pressDay.bind(this);
     this.shouldComponentUpdate = shouldComponentUpdate;
     this.animationMap = {};
     this.currentAnimation = null;
@@ -203,11 +208,11 @@ class Calendar extends Component {
           key={id}
           state={state}
           theme={this.props.theme}
-          onPress={this.pressDay.bind(this, day)}
+          onPress={this.pressDay}
+          day={day}
           marked={this.getDateMarking(day)}
           markingExists={markingExists}
           animationValue={animationValue}
-          day={day}
           currentMonth={this.state.currentMonth}
         >
           {day.getDate()}
@@ -346,7 +351,7 @@ class Calendar extends Component {
     if (!this.props.markedDates) {
       return false;
     }
-    const dates = this.props.markedDates[day.toString('yyyy-MM-dd')] || [];
+    const dates = this.props.markedDates[day.toString('yyyy-MM-dd')] || EmptyArray;
     if (dates.length || dates) {
       return dates;
     } else {
@@ -388,6 +393,7 @@ class Calendar extends Component {
           firstDay={this.props.firstDay}
           renderArrow={this.props.renderArrow}
           monthFormat={this.props.monthFormat}
+          hideDayNames={this.props.hideDayNames}
         />
         {weeks}
         {this.props.renderCalendarFooter && this.props.renderCalendarFooter(this.state.currentMonth.toISOString())}
