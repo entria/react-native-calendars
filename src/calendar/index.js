@@ -73,7 +73,7 @@ class Calendar extends Component {
     // Disables changing month when click on days of other months (when hideExtraDays is false). Default = false
     disableMonthChange: PropTypes.bool,
     //Hide day names. Default = false
-    hideDayNames: PropTypes.bool
+    hideDayNames: PropTypes.bool,
     // Should we animate the selection of the dates?
     // Keep in mind this is expected to work only with a simple date selection using markedDates
     //  (continuous dates are selected, and the first date has startingDay checked and the last one has endingDay)
