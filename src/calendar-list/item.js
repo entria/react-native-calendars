@@ -36,6 +36,7 @@ class CalendarListItem extends Component {
           firstDay={this.props.firstDay}
           monthFormat={this.props.monthFormat}
           shouldAnimateRangeSelection={this.props.shouldAnimateRangeSelection}
+          shouldAllowPressOnDisabledDates={this.props.shouldAllowPressOnDisabledDates}
           animationDuration={this.props.animationDuration}
           onAnimationComplete={this.props.onAnimationComplete}
           renderCalendarFooter={this.props.renderCalendarFooter}
