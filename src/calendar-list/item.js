@@ -35,8 +35,8 @@ class CalendarListItem extends Component {
           maxDate={this.props.maxDate}
           firstDay={this.props.firstDay}
           monthFormat={this.props.monthFormat}
-          shouldAnimateRangeSelection={this.props.shouldAnimateRangeSelection}
           shouldAllowPressOnDisabledDates={this.props.shouldAllowPressOnDisabledDates}
+          shouldAnimateRangeSelection={this.props.shouldAnimateRangeSelection}
           animationDuration={this.props.animationDuration}
           onAnimationComplete={this.props.onAnimationComplete}
           renderCalendarFooter={this.props.renderCalendarFooter}

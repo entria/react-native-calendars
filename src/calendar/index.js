@@ -74,14 +74,13 @@ class Calendar extends Component {
     disableMonthChange: PropTypes.bool,
     //Hide day names. Default = false
     hideDayNames: PropTypes.bool,
+    // Allow the callback onDayPress to be called even for days that fall outside the min / max date ranges
+    shouldAllowPressOnDisabledDates: PropTypes.bool,
     // Should we animate the selection of the dates?
     // Keep in mind this is expected to work only with a simple date selection using markedDates
     //  (continuous dates are selected, and the first date has startingDay checked and the last one has endingDay)
     // Default = undefined
     shouldAnimateRangeSelection: PropTypes.bool,
-    // Allow the press callback to be fired for presses on dates that fall outside the min/max date ranges.
-    // Default = false
-    shouldAllowPressOnDisabledDates: PropTypes.bool,
     // The duration (in MS) of the animation, in case shouldAnimateRangeSelection is set to true.
     // Default = 560
     animationDuration: PropTypes.number,
@@ -150,15 +149,17 @@ class Calendar extends Component {
   pressDay(day) {
     const minDate = parseDate(this.props.minDate);
     const maxDate = parseDate(this.props.maxDate);
-    const isDateInsideValidRange = !(
-      minDate && !dateutils.isGTE(day, minDate)) && !(maxDate && !dateutils.isLTE(day, maxDate)
-    );
+    const isDayInsideValidRange = !(minDate && !dateutils.isGTE(day, minDate))
+      && !(maxDate && !dateutils.isLTE(day, maxDate));
 
-    if (isDateInsideValidRange || this.props.shouldAllowPressOnDisabledDates) {
+    if (isDayInsideValidRange) {
       const shouldUpdateMonth = this.props.disableMonthChange === undefined || !this.props.disableMonthChange;
       if (shouldUpdateMonth) {
         this.updateMonth(day);
       }
+    }
+
+    if (isDayInsideValidRange || this.props.shouldAllowPressOnDisabledDates) {
       if (this.props.onDayPress) {
         this.props.onDayPress(xdateToData(day));
       }
