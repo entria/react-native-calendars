@@ -121,7 +121,6 @@ class Calendar extends Component {
     if (this.props.markedDates !== nextProps.markedDates) {
       if (nextProps.shouldAnimateRangeSelection && this.isRangeSelected(nextProps.markedDates)) {
         this.animationMap = this.createAnimationMap(nextProps.markedDates, nextProps.animationDuration);
-        console.log('Starting animation!');
         this.startAnimationFromAnimationMap();
       }
     }
@@ -208,9 +207,6 @@ class Calendar extends Component {
       const markingExists = this.props.markedDates ? true : false;
       const markingForDay = this.getDateMarking(day);
       const animationValue = this.getAnimationValue(day);
-      if (markingForDay) {
-        // console.log(animationValue);
-      }
       dayComp = (
         <DayComp
           key={id}

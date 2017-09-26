@@ -46,6 +46,6 @@ export default function shouldComponentUpdate(nextProps, nextState) {
       field: 'current'
     };
   }
-  //console.log(shouldUpdate.field, shouldUpdate.update);
+
   return shouldUpdate.update;
 }
