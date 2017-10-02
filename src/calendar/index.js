@@ -121,7 +121,7 @@ class Calendar extends Component {
     if (this.props.markedDates !== nextProps.markedDates) {
       if (nextProps.shouldAnimateRangeSelection && this.isRangeSelected(nextProps.markedDates)) {
         this.animationMap = this.createAnimationMap(nextProps.markedDates, nextProps.animationDuration);
-        this.startAnimationFromAnimationMap();
+        this.startAnimationFromAnimationMap(nextProps.markedDates);
       }
     }
   }
@@ -322,10 +322,10 @@ class Calendar extends Component {
     return animationMap;
   }
   
-  startAnimationFromAnimationMap() {
+  startAnimationFromAnimationMap(markedDatesProp) {
     const animationMap = this.animationMap;
     // if we are here, we expect markedDates to be valid.
-    const markedDates = Object.keys(this.props.markedDates);
+    const markedDates = Object.keys(markedDatesProp);
     const lastDay = parseDate(markedDates[markedDates.length - 1]);
     const isThisCalendarForTheLastDay = dateutils.sameMonth(this.state.currentMonth, lastDay);
 
