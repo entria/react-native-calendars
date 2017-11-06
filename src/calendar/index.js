@@ -73,7 +73,7 @@ class Calendar extends Component {
     //Hide day names. Default = false
     hideDayNames: PropTypes.bool,
     //Disable days by default. Default = false
-    disabledByDefault: PropTypes.bool
+    disabledByDefault: PropTypes.bool,
     // Allow the callback onDayPress to be called even for days that fall outside the min / max date ranges
     shouldAllowPressOnDisabledDates: PropTypes.bool,
     // Should we animate the selection of the dates?
