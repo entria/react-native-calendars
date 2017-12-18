@@ -11,7 +11,7 @@ import dateutils from '../dateutils';
 import Calendar from '../calendar';
 import CalendarListItem from './item';
 
-const calendarHeight = 360;
+const calendarHeight = 410;
 class CalendarList extends Component {
   static propTypes = {
     ...Calendar.propTypes,
@@ -170,7 +170,7 @@ class CalendarList extends Component {
         data={this.state.rows}
         //snapToAlignment='start'
         //snapToInterval={calendarHeight}
-        removeClippedSubviews={Platform.OS === 'android' ? false : true}
+        //removeClippedSubviews={Platform.OS === 'android' ? false : true}
         pageSize={1}
         onViewableItemsChanged={this.onViewableItemsChangedBound}
         renderItem={this.renderCalendarBound}
