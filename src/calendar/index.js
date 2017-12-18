@@ -5,6 +5,7 @@ import {
   Animated,
   Image,
   Easing,
+  Text,
 } from 'react-native';
 import PropTypes from 'prop-types';
 
@@ -13,7 +14,7 @@ import dateutils from '../dateutils';
 import {xdateToData, parseDate} from '../interface';
 import styleConstructor from './style';
 import Day from './day/basic';
-import UnitDay from './day/interactive';
+import UnitDay from './day/period';
 import MultiDotDay from './day/multi-dot';
 import DayDotOver from './day/dotOver';
 import CalendarHeader from './header';
@@ -21,10 +22,10 @@ import shouldComponentUpdate from './updater';
 
 //Fallback when RN version is < 0.44
 const viewPropTypes = ViewPropTypes || View.propTypes;
-const interactiveLikeDays = ['dotOver', 'interactive'];
+const interactiveLikeDays = ['dotOver', 'period'];
 const markingTypeDayCompMap = {
   'dotOver': DayDotOver,
-  'interactive': UnitDay,
+  'period': UnitDay,
   'simple': Day,
 };
 
@@ -49,7 +50,7 @@ class Calendar extends Component {
     // If firstDay=1 week starts from Monday. Note that dayNames and dayNamesShort should still start from Sunday.
     firstDay: PropTypes.number,
 
-    // Date marking style [simple/interactive/dotOver]. Default = 'simple'
+    // Date marking style [simple/period/dotOver]. Default = 'simple'
     markingType: PropTypes.string,
 
     // Hide month navigation arrows. Default = false
@@ -66,6 +67,8 @@ class Calendar extends Component {
     onVisibleMonthsChange: PropTypes.func,
     // Replace default arrows with custom ones (direction can be 'left' or 'right')
     renderArrow: PropTypes.func,
+    // Provide custom day rendering component
+    dayComponent: PropTypes.any,
     // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
     monthFormat: PropTypes.string,
     // Disables changing month when click on days of other months (when hideExtraDays is false). Default = false
@@ -144,7 +147,8 @@ class Calendar extends Component {
     });
   }
 
-  pressDay(day) {
+  pressDay(date) {
+    const day = parseDate(date);
     const minDate = parseDate(this.props.minDate);
     const maxDate = parseDate(this.props.maxDate);
     const isDayInsideValidRange = !(minDate && !dateutils.isGTE(day, minDate))
@@ -193,19 +197,23 @@ class Calendar extends Component {
       const markingExists = this.props.markedDates ? true : false;
       const markingForDay = this.getDateMarking(day);
       const animationValue = this.getAnimationValue(day);
+      const date = day.getDate();
       dayComp = (
         <DayComp
           key={id}
           state={state}
           theme={this.props.theme}
           onPress={this.pressDay}
+          date={xdateToData(day)}
+          marking={this.getDateMarking(day)}
+          
           day={day}
           marked={this.getDateMarking(day)}
           markingExists={markingExists}
           animationValue={animationValue}
           currentMonth={this.state.currentMonth}
         >
-          {day.getDate()}
+          {date}
         </DayComp>
       );
     }
@@ -213,8 +221,12 @@ class Calendar extends Component {
   }
 
   getDayComponent() {
+    if (this.props.dayComponent) {
+      return this.props.dayComponent;
+    }
+
     switch (this.props.markingType) {
-    case 'interactive':
+    case 'period':
       return UnitDay;
     case 'multi-dot':
       return MultiDotDay;
@@ -362,11 +374,29 @@ class Calendar extends Component {
     }
   }
 
+  renderWeekNumber (weekNumber) {
+    return (
+      <View key={`week-${weekNumber}`} style={{
+        width: 32,
+        height: 32,
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <Text>{weekNumber}</Text>
+      </View>
+    );
+  }
+
   renderWeek(days, id) {
     const week = [];
     days.forEach((day, id2) => {
       week.push(this.renderDay(day, id2));
     }, this);
+
+    if (this.props.showWeekNumbers) {
+      week.unshift(this.renderWeekNumber(days[0].getWeek()));
+    }
+
     return (<View style={this.style.week} key={id}>{week}</View>);
   }
 
@@ -397,6 +427,7 @@ class Calendar extends Component {
           renderArrow={this.props.renderArrow}
           monthFormat={this.props.monthFormat}
           hideDayNames={this.props.hideDayNames}
+          weekNumbers={this.props.showWeekNumbers}
         />
         {weeks}
         {this.props.renderCalendarFooter && this.props.renderCalendarFooter(this.state.currentMonth.toISOString())}

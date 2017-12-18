@@ -8,6 +8,7 @@ export default function(theme={}) {
   return StyleSheet.create({
     header: {
       flexDirection: 'row',
+      // justifyContent: 'space-between',
       justifyContent: 'flex-start',
       paddingHorizontal: appStyle.monthHeaderPaddingHorizontal,
       alignItems: 'center'
