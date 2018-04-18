@@ -3,9 +3,7 @@ import {
   View,
   ViewPropTypes,
   Animated,
-  Image,
   Easing,
-  Text,
 } from 'react-native';
 import PropTypes from 'prop-types';
 
@@ -85,7 +83,7 @@ class Calendar extends Component {
     // Handler which gets executed when press arrow icon left. It receive a callback can go back month
     onPressArrowLeft: PropTypes.func,
     // Handler which gets executed when press arrow icon left. It receive a callback can go next month
-    onPressArrowRight: PropTypes.func
+    onPressArrowRight: PropTypes.func,
     // Allow the callback onDayPress to be called even for days that fall outside the min / max date ranges
     shouldAllowPressOnDisabledDates: PropTypes.bool,
     // Should we animate the selection of the dates?
