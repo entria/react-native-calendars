@@ -16,7 +16,9 @@ class CalendarHeader extends Component {
     firstDay: PropTypes.number,
     renderArrow: PropTypes.func,
     hideDayNames: PropTypes.bool,
-    weekNumbers: PropTypes.bool
+    weekNumbers: PropTypes.bool,
+    onPressArrowLeft: PropTypes.func,
+    onPressArrowRight: PropTypes.func
   };
 
   constructor(props) {
@@ -24,6 +26,8 @@ class CalendarHeader extends Component {
     this.style = styleConstructor(props.theme);
     this.addMonth = this.addMonth.bind(this);
     this.substractMonth = this.substractMonth.bind(this);
+    this.onPressLeft = this.onPressLeft.bind(this);
+    this.onPressRight = this.onPressRight.bind(this);
   }
 
   addMonth() {
@@ -44,7 +48,26 @@ class CalendarHeader extends Component {
     if (nextProps.showIndicator !== this.props.showIndicator) {
       return true;
     }
+    if (nextProps.hideDayNames !== this.props.hideDayNames) {
+      return true;
+    }
     return false;
+  }
+
+  onPressLeft() {
+    const {onPressArrowLeft} = this.props;
+    if(typeof onPressArrowLeft === 'function') {
+      return onPressArrowLeft(this.substractMonth);
+    }
+    return this.substractMonth();
+  }
+
+  onPressRight() {
+    const {onPressArrowRight} = this.props;
+    if(typeof onPressArrowRight === 'function') {
+      return onPressArrowRight(this.addMonth);
+    }
+    return this.addMonth();
   }
 
   render() {
@@ -54,8 +77,9 @@ class CalendarHeader extends Component {
     if (!this.props.hideArrows) {
       leftArrow = (
         <TouchableOpacity
-          onPress={this.substractMonth}
+          onPress={this.onPressLeft}
           style={this.style.arrow}
+          hitSlop={{left: 20, right: 20, top: 20, bottom: 20}}
         >
           {this.props.renderArrow
             ? this.props.renderArrow('left')
@@ -66,7 +90,11 @@ class CalendarHeader extends Component {
         </TouchableOpacity>
       );
       rightArrow = (
-        <TouchableOpacity onPress={this.addMonth} style={this.style.arrow}>
+        <TouchableOpacity
+          onPress={this.onPressRight}
+          style={this.style.arrow}
+          hitSlop={{left: 20, right: 20, top: 20, bottom: 20}}
+        >
           {this.props.renderArrow
             ? this.props.renderArrow('right')
             : <Image
@@ -85,7 +113,7 @@ class CalendarHeader extends Component {
         <View style={this.style.header}>
           {leftArrow}
           <View style={{ flexDirection: 'row' }}>
-            <Text style={this.style.monthText}>
+            <Text allowFontScaling={false} style={this.style.monthText} accessibilityTraits='header'>
               {this.props.month.toString(this.props.monthFormat ? this.props.monthFormat : 'MMMM yyyy')}
             </Text>
             {indicator}
@@ -95,9 +123,9 @@ class CalendarHeader extends Component {
         {
           !this.props.hideDayNames &&
           <View style={this.style.week}>
-            {this.props.weekNumbers && <Text style={this.style.dayHeader}></Text>}
+            {this.props.weekNumbers && <Text allowFontScaling={false} style={this.style.dayHeader}></Text>}
             {weekDaysNames.map((day, idx) => (
-              <Text key={idx} style={this.style.dayHeader} numberOfLines={1}>{day}</Text>
+              <Text allowFontScaling={false} key={idx} accessible={false} style={this.style.dayHeader} numberOfLines={1} importantForAccessibility='no'>{day}</Text>
             ))}
           </View>
         }

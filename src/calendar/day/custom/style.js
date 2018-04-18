@@ -1,7 +1,7 @@
 import {StyleSheet, Platform} from 'react-native';
 import * as defaultStyle from '../../../style';
 
-const STYLESHEET_ID = 'stylesheet.day.multiDot';
+const STYLESHEET_ID = 'stylesheet.day.single';
 
 export default function styleConstructor(theme={}) {
   const appStyle = {...defaultStyle, ...theme};
@@ -12,7 +12,7 @@ export default function styleConstructor(theme={}) {
       alignItems: 'center'
     },
     text: {
-      marginTop: 4,
+      marginTop: Platform.OS === 'android' ? 4 : 6,
       fontSize: appStyle.textDayFontSize,
       fontFamily: appStyle.textDayFontFamily,
       fontWeight: '300',
@@ -34,22 +34,6 @@ export default function styleConstructor(theme={}) {
     },
     disabledText: {
       color: appStyle.textDisabledColor
-    },
-    dot: {
-      width: 4,
-      height: 4,
-      marginTop: 1,
-      marginLeft: 1,
-      marginRight: 1,
-      borderRadius: 2,
-      opacity: 0
-    },
-    visibleDot: {
-      opacity: 1,
-      backgroundColor: appStyle.dotColor
-    },
-    selectedDot: {
-      backgroundColor: appStyle.selectedDotColor
     },
     ...(theme[STYLESHEET_ID] || {})
   });

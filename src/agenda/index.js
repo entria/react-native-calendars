@@ -386,6 +386,7 @@ export default class AgendaView extends Component {
               current={this.currentMonth}
               markedDates={this.generateMarkings()}
               markingType={this.props.markingType}
+              removeClippedSubviews={this.props.removeClippedSubviews}
               onDayPress={this._chooseDayFromCalendar.bind(this)}
               scrollingEnabled={this.state.calendarScrollable}
               hideExtraDays={this.state.calendarScrollable}
@@ -394,13 +395,14 @@ export default class AgendaView extends Component {
               pastScrollRange={this.props.pastScrollRange}
               futureScrollRange={this.props.futureScrollRange}
               dayComponent={this.props.dayComponent}
+              disabledByDefault={this.props.disabledByDefault}
             />
           </Animated.View>
           {knob}
         </Animated.View>
         <Animated.View style={weekdaysStyle}>
           {weekDaysNames.map((day) => (
-            <Text key={day} style={this.styles.weekday} numberOfLines={1}>{day}</Text>
+            <Text allowFontScaling={false} key={day} style={this.styles.weekday} numberOfLines={1}>{day}</Text>
           ))}
         </Animated.View>
         <Animated.ScrollView

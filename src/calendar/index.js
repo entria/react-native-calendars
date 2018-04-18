@@ -16,6 +16,7 @@ import styleConstructor from './style';
 import Day from './day/basic';
 import UnitDay from './day/period';
 import MultiDotDay from './day/multi-dot';
+import SingleDay from './day/custom';
 import DayDotOver from './day/dotOver';
 import CalendarHeader from './header';
 import shouldComponentUpdate from './updater';
@@ -50,7 +51,7 @@ class Calendar extends Component {
     // If firstDay=1 week starts from Monday. Note that dayNames and dayNamesShort should still start from Sunday.
     firstDay: PropTypes.number,
 
-    // Date marking style [simple/period/dotOver]. Default = 'simple'
+    // Date marking style [simple/period]. Default = 'simple'
     markingType: PropTypes.string,
 
     // Hide month navigation arrows. Default = false
@@ -62,6 +63,8 @@ class Calendar extends Component {
 
     // Handler which gets executed on day press. Default = undefined
     onDayPress: PropTypes.func,
+    // Handler which gets executed on day long press. Default = undefined
+    onDayLongPress: PropTypes.func,
     // Handler which gets executed when visible month changes in calendar. Default = undefined
     onMonthChange: PropTypes.func,
     onVisibleMonthsChange: PropTypes.func,
@@ -73,10 +76,16 @@ class Calendar extends Component {
     monthFormat: PropTypes.string,
     // Disables changing month when click on days of other months (when hideExtraDays is false). Default = false
     disableMonthChange: PropTypes.bool,
-    //Hide day names. Default = false
+    //  Hide day names. Default = false
     hideDayNames: PropTypes.bool,
-    //Disable days by default. Default = false
+    // Disable days by default. Default = false
     disabledByDefault: PropTypes.bool,
+    // Show week numbers. Default = false
+    showWeekNumbers: PropTypes.bool,
+    // Handler which gets executed when press arrow icon left. It receive a callback can go back month
+    onPressArrowLeft: PropTypes.func,
+    // Handler which gets executed when press arrow icon left. It receive a callback can go next month
+    onPressArrowRight: PropTypes.func
     // Allow the callback onDayPress to be called even for days that fall outside the min / max date ranges
     shouldAllowPressOnDisabledDates: PropTypes.bool,
     // Should we animate the selection of the dates?
@@ -107,6 +116,7 @@ class Calendar extends Component {
     this.updateMonth = this.updateMonth.bind(this);
     this.addMonth = this.addMonth.bind(this);
     this.pressDay = this.pressDay.bind(this);
+    this.longPressDay = this.longPressDay.bind(this);
     this.shouldComponentUpdate = shouldComponentUpdate;
     this.animationMap = {};
     this.currentAnimation = null;
@@ -147,7 +157,7 @@ class Calendar extends Component {
     });
   }
 
-  pressDay(date) {
+  _handleDayInteraction(date, interaction) {
     const day = parseDate(date);
     const minDate = parseDate(this.props.minDate);
     const maxDate = parseDate(this.props.maxDate);
@@ -162,10 +172,18 @@ class Calendar extends Component {
     }
 
     if (isDayInsideValidRange || this.props.shouldAllowPressOnDisabledDates) {
-      if (this.props.onDayPress) {
-        this.props.onDayPress(xdateToData(day));
+      if (interaction) {
+        interaction(xdateToData(day));
       }
     }
+  }
+
+  pressDay(date) {
+    this._handleDayInteraction(date, this.props.onDayPress);
+  }
+
+  longPressDay(date) {
+    this._handleDayInteraction(date, this.props.onDayLongPress);
   }
 
   addMonth(count) {
@@ -187,10 +205,11 @@ class Calendar extends Component {
     }
     let dayComp;
     if (!dateutils.sameMonth(day, this.state.currentMonth) && this.props.hideExtraDays) {
-      if (interactiveLikeDays.indexOf(this.props.markingType) !== -1) {
+      //if (interactiveLikeDays.indexOf(this.props.markingType) !== -1) {
+      if (this.props.markingType === 'period') {
         dayComp = (<View key={id} style={{flex: 1}}/>);
       } else {
-        dayComp = (<View key={id} style={{width: 32}}/>);
+        dayComp = (<View key={id} style={this.style.dayContainer}/>);
       }
     } else {
       const DayComp = this.getDayComponent();
@@ -204,9 +223,10 @@ class Calendar extends Component {
           state={state}
           theme={this.props.theme}
           onPress={this.pressDay}
+          onLongPress={this.longPressDay}
           date={xdateToData(day)}
           marking={this.getDateMarking(day)}
-          
+
           day={day}
           marked={this.getDateMarking(day)}
           markingExists={markingExists}
@@ -230,6 +250,8 @@ class Calendar extends Component {
       return UnitDay;
     case 'multi-dot':
       return MultiDotDay;
+    case 'custom':
+      return SingleDay;
     case 'dotOver':
       return DayDotOver;
     default:
@@ -332,7 +354,7 @@ class Calendar extends Component {
 
     return animationMap;
   }
-  
+
   startAnimationFromAnimationMap(markedDatesProp) {
     const animationMap = this.animationMap;
     // if we are here, we expect markedDates to be valid.
@@ -375,17 +397,22 @@ class Calendar extends Component {
   }
 
   renderWeekNumber (weekNumber) {
-    return (
-      <View key={`week-${weekNumber}`} style={{
-        width: 32,
-        height: 32,
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}>
-        <Text>{weekNumber}</Text>
-      </View>
-    );
+    return <Day key={`week-${weekNumber}`} theme={this.props.theme} marking={{disableTouchEvent: true}} state='disabled'>{weekNumber}</Day>;
   }
+
+  // @TODO - review this
+  // renderWeekNumber (weekNumber) {
+  //   return (
+  //     <View key={`week-${weekNumber}`} style={{
+  //       width: 32,
+  //       height: 32,
+  //       alignItems: 'center',
+  //       justifyContent: 'center'
+  //     }}>
+  //       <Text>{weekNumber}</Text>
+  //     </View>
+  //   );
+  // }
 
   renderWeek(days, id) {
     const week = [];
@@ -394,7 +421,7 @@ class Calendar extends Component {
     }, this);
 
     if (this.props.showWeekNumbers) {
-      week.unshift(this.renderWeekNumber(days[0].getWeek()));
+      week.unshift(this.renderWeekNumber(days[days.length - 1].getWeek()));
     }
 
     return (<View style={this.style.week} key={id}>{week}</View>);
@@ -428,8 +455,10 @@ class Calendar extends Component {
           monthFormat={this.props.monthFormat}
           hideDayNames={this.props.hideDayNames}
           weekNumbers={this.props.showWeekNumbers}
+          onPressArrowLeft={this.props.onPressArrowLeft}
+          onPressArrowRight={this.props.onPressArrowRight}
         />
-        {weeks}
+        <View style={this.style.monthView}>{weeks}</View>
         {this.props.renderCalendarFooter && this.props.renderCalendarFooter(this.state.currentMonth.toISOString())}
       </View>);
   }

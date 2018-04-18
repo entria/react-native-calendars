@@ -9,7 +9,9 @@ export default function getStyle(theme={}) {
     container: {
       paddingLeft: 5,
       paddingRight: 5,
-      flex: 1,
+      backgroundColor: appStyle.calendarBackground
+    },
+    monthView: {
       backgroundColor: appStyle.calendarBackground
     },
     week: {
@@ -17,6 +19,9 @@ export default function getStyle(theme={}) {
       marginBottom: 7,
       flexDirection: 'row',
       justifyContent: 'space-around'
+    },
+    dayContainer: {
+      width: 32
     },
     ...(theme[STYLESHEET_ID] || {})
   });
