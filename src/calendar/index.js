@@ -345,6 +345,7 @@ class Calendar extends Component {
             toValue: 1,
             duration: Math.max(duration / validDates.length - ignoredDays, 10),
             easing: Easing.linear,
+            isInteraction: false,
           }
         );
       }
