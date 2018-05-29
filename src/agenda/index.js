@@ -55,7 +55,7 @@ export default class AgendaView extends Component {
     renderEmptyData: PropTypes.func,
     // specify your item comparison function for increased performance
     rowHasChanged: PropTypes.func,
-    
+
     // Max amount of months allowed to scroll to the past. Default = 50
     pastScrollRange: PropTypes.number,
 
@@ -68,7 +68,7 @@ export default class AgendaView extends Component {
     minDate: PropTypes.any,
     // Maximum date that can be selected, dates after maxDate will be grayed out. Default = undefined
     maxDate: PropTypes.any,
-    
+
     // Collection of dates that have to be marked. Default = items
     markedDates: PropTypes.object,
     // Optional marking type if custom markedDates are provided
@@ -381,6 +381,7 @@ export default class AgendaView extends Component {
               theme={this.props.theme}
               onVisibleMonthsChange={this.onVisibleMonthsChange.bind(this)}
               ref={(c) => this.calendar = c}
+              shouldInitiallyScrollToMonth={false}
               minDate={this.props.minDate}
               maxDate={this.props.maxDate}
               current={this.currentMonth}

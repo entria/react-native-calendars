@@ -111,6 +111,14 @@ class CalendarList extends Component {
     this.listView.scrollToOffset({offset: scrollAmount, animated: false});
   }
 
+  initialScrollIndex() {
+    if (!this.state.openDate || !this.props.shouldInitiallyScrollToMonth) {
+      return undefined;
+    }
+
+    return this.getMonthIndex(this.state.openDate);
+  }
+
   componentWillReceiveProps(props) {
     const current = parseDate(this.props.current);
     const nextCurrent = parseDate(props.current);
@@ -190,6 +198,8 @@ class CalendarList extends Component {
         data={this.state.rows}
         //snapToAlignment='start'
         //snapToInterval={this.calendarHeight}
+        initialScrollIndex={this.initialScrollIndex}
+        // initialScrollIndex={this.state.openDate ? this.getMonthIndex(this.state.openDate) : false}
         removeClippedSubviews={this.props.removeClippedSubviews !== undefined ? this.props.removeClippedSubviews: (Platform.OS === 'android' ? false : true)}
         pageSize={1}
         horizontal={this.props.horizontal || false}
@@ -200,7 +210,6 @@ class CalendarList extends Component {
         showsHorizontalScrollIndicator={this.props.showScrollIndicator !== undefined ? this.props.showScrollIndicator : false}
         scrollEnabled={this.props.scrollingEnabled !== undefined ? this.props.scrollingEnabled : true}
         keyExtractor={(item, index) => String(index)}
-        initialScrollIndex={this.state.openDate ? this.getMonthIndex(this.state.openDate) : false}
         getItemLayout={this.getItemLayout}
         scrollsToTop={this.props.scrollsToTop !== undefined ? this.props.scrollsToTop : false}
       />
@@ -209,7 +218,8 @@ class CalendarList extends Component {
 }
 
 CalendarList.defaultProps = {
-  calendarHeight: 360
+  calendarHeight: 360,
+  shouldInitiallyScrollToMonth: true
 };
 
 export default CalendarList;
