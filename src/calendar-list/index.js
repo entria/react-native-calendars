@@ -173,7 +173,9 @@ class CalendarList extends Component {
       this.scrollToMonth(nextCurrent);
     }
 
+    const diffMonths = Math.round(this.state.openDate.clone().setDate(1).diffMonths(scrollTo.clone().setDate(1)));
     const size = this.props.horizontal ? this.calendarWidth : this.calendarHeight;
+
     const scrollAmount = (size * this.pastScrollRange) + (diffMonths * size);
 
     this.listView.scrollToOffset({offset: scrollAmount, animated: false});
