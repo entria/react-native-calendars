@@ -246,13 +246,6 @@ class CalendarList extends Component {
         style={[this.style.container, this.props.style]}
         initialNumToRender={this.pastScrollRange + this.futureScrollRange + 1}
         data={this.state.rows}
-<<<<<<< HEAD
-        //snapToAlignment='start'
-        //snapToInterval={this.calendarHeight}
-        initialScrollIndex={this.initialScrollIndex}
-        // initialScrollIndex={this.state.openDate ? this.getMonthIndex(this.state.openDate) : false}
-=======
->>>>>>> solution/master
         removeClippedSubviews={this.props.removeClippedSubviews !== undefined ? this.props.removeClippedSubviews: (Platform.OS === 'android' ? false : true)}
         pageSize={1}
         horizontal={this.props.horizontal || false}
