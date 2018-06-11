@@ -8,6 +8,7 @@ function shouldUpdate(a, b, paths) {
       return true;
     }
   }
+  
   return false;
 }
 

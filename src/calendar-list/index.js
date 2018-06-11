@@ -48,23 +48,6 @@ class CalendarList extends Component {
     calendarHeight: PropTypes.number,
   };
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const rowclone = [...prevState.rows];
-    const newrows = [];
-    for (let i = 0; i < rowclone.length; i++) {
-      let val = prevState.texts[i];
-      if (rowclone[i].getTime) {
-        val = rowclone[i].clone();
-        val.propbump = rowclone[i].propbump ? rowclone[i].propbump + 1 : 1;
-      }
-      newrows.push(val);
-    }
-
-    return {
-      rows: newrows
-    };
-  }
-
   constructor(props) {
     super(props);
     this.pastScrollRange = props.pastScrollRange === undefined ? 50 : props.pastScrollRange;
