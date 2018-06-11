@@ -155,6 +155,21 @@ class CalendarList extends Component {
     if (nextCurrent && current && nextCurrent.getTime() !== current.getTime()) {
       this.scrollToMonth(nextCurrent);
     }
+
+    const rowclone = this.state.rows;
+    const newrows = [];
+    for (let i = 0; i < rowclone.length; i++) {
+      let val = this.state.texts[i];
+      if (rowclone[i].getTime) {
+        val = rowclone[i].clone();
+        val.propbump = rowclone[i].propbump ? rowclone[i].propbump + 1 : 1;
+      }
+      newrows.push(val);
+    }
+
+    return this.setState({
+      rows: newrows,
+    });
   }
 
   onViewableItemsChanged({viewableItems}) {
