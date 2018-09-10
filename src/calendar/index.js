@@ -204,11 +204,7 @@ class Calendar extends Component {
     }
     let dayComp;
     if (!dateutils.sameMonth(day, this.state.currentMonth) && this.props.hideExtraDays) {
-      if (['period', 'multi-period'].includes(this.props.markingType)) {
-        dayComp = (<View key={id} style={{flex: 1}}/>);
-      } else {
-        dayComp = (<View key={id} style={this.style.dayContainer}/>);
-      }
+      dayComp = (<View key={id} style={{flex: 1}}/>);
     } else {
       const DayComp = this.getDayComponent();
       const markingExists = this.props.markedDates ? true : false;
@@ -443,8 +439,11 @@ class Calendar extends Component {
         indicator = true;
       }
     }
+
+    const height = 72 * weeks.length;
+
     return (
-      <View style={[this.style.container, this.props.style]}>
+      <View style={[this.style.container, this.props.style, { height }]}>
         <CalendarHeader
           theme={this.props.theme}
           hideArrows={this.props.hideArrows}
